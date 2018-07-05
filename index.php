@@ -5,6 +5,22 @@
     <title></title>
   </head>
   <body>
+    <h1>Emails</h1>
+
+    <h3>Please input the list of emails to be processed:</h3>
+    <form class="form" action="index.php" method="post">
+      <textarea name="emails" rows="8" cols="80"></textarea>
+      <br>
+      <input type="submit" name="submit">
+    </form>
+      <br>
+      <hr>
+
+    <?php
+      if (isset($_POST['submit'])) {
+          echo $_POST["emails"];
+      }
+     ?>
 
   </body>
 </html>
