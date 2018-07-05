@@ -18,7 +18,12 @@
 
     <?php
       if (isset($_POST['submit'])) {
-          echo $_POST["emails"];
+
+          $emails = preg_split("/\r\n|\n\r|\s/", $_POST["emails"]);
+          foreach ($emails as $key => $value) {
+            echo $key . "-" .  $value;
+            echo "<br>";
+          }
       }
      ?>
 
