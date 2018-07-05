@@ -18,17 +18,17 @@
 
     <?php
       if (isset($_POST['submit'])) {
-
           $emails = preg_split("/\r\n|\n\r|\s/", $_POST["emails"]);
           $domains = [];
           foreach ($emails as $email) {
-            if (strpos($email, "@")) {
-              $domain = end(explode("@", $email));
-              array_push($domains, $domain);
-            }
+              if (strpos($email, "@")) {
+                  $domain = end(explode("@", $email));
+                  if (!in_array($domain, $domains)) {
+                      array_push($domains, $domain);
+                  }
+              }
           }
-          print_r( $domains);
-
+          print_r($domains);
       }
      ?>
 
