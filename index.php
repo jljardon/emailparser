@@ -20,10 +20,15 @@
       if (isset($_POST['submit'])) {
 
           $emails = preg_split("/\r\n|\n\r|\s/", $_POST["emails"]);
-          foreach ($emails as $key => $value) {
-            echo $key . "-" .  $value;
-            echo "<br>";
+          $domains = [];
+          foreach ($emails as $email) {
+            if (strpos($email, "@")) {
+              $domain = end(explode("@", $email));
+              array_push($domains, $domain);
+            }
           }
+          print_r( $domains);
+
       }
      ?>
 
