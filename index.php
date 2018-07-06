@@ -18,43 +18,82 @@
 
     <?php
       if (isset($_POST['submit'])) {
-
-          // This function parses the emails separated by whitespace,
-          // iterates the array of emails, validates if they have an "@"
-          // and returns and array of unique email domains
-          function processEmails()
+          /**
+           * Takes a string of emails separated by whitespace to initiate
+           * Parses the emails and stores them as an array in an instance variable
+           * Gets the domains of parsed emails and stores unique values
+           * as an array in an instance variable
+           */
+          class EmailParser
           {
-              $emails = preg_split("/\r\n|\n\r|\s/", $_POST["emails"]);
-              $domains = [];
-              foreach ($emails as $key => $value) {
-                  $domain = end(explode("@", $value));
-                  if (strpos($value, "@") && !in_array($domain, $domains)) {
-                      array_push($domains, $domain);
+              private $domains = [];
+              private $emails = [];
+
+              public function __construct($unparsedEmails)
+              {
+                  $this->setEmails(preg_split("/\r\n|\n\r|\s/", $unparsedEmails));
+
+                  foreach ($this->getEmails() as $key => $value) {
+                      $this->addDomain($value);
                   }
               }
-              return $domains;
-          }
 
-          // This function takes and array of domains as an argument
-          // Displays the list of domains inside a table in html.
-          function showTable($domains)
-          {
-              echo "<table>
+              // Validates dates an email domain an add it
+              // to the array of domain if not found
+              public function addDomain($email)
+              {
+                  if (strpos($email, "@")) {
+                      $domain = end(explode("@", $email));
+                      if (!in_array($domain, $this->getDomains())) {
+                          $this->setDomains($domain);
+                      }
+                  }
+              }
+
+              // Takes and array of domains as an argument
+              // Displays the list of domains inside a table
+              public function showTable()
+              {
+                  echo "<table>
                 <tr>
                   <th>Number</th>
                   <th>Domain</th>
                 </tr>";
 
-              foreach ($domains as $key => $value) {
-                  echo "<tr>";
-                  echo "<td>" . ($key + 1) . "</td>";
-                  echo "<td>" . $value . "</td>";
-                  echo "</tr>";
+                  foreach ($this->getDomains() as $key => $value) {
+                      echo "<tr>";
+                      echo "<td>" . ($key + 1) . "</td>";
+                      echo "<td>" . $value . "</td>";
+                      echo "</tr>";
+                  }
+                  echo "</table>";
               }
-              echo "</table>";
+
+
+
+              private function setDomains($domain)
+              {
+                  array_push($this->domains, $domain);
+              }
+
+              public function getDomains()
+              {
+                  return $this->domains;
+              }
+
+              private function setEmails($arr)
+              {
+                  $this->emails = $arr;
+              }
+
+              public function getEmails()
+              {
+                  return $this->emails;
+              }
           }
-          // Executes script
-          showTable(processEmails());
+
+          $parser = new EmailParser($_POST["emails"]);
+          $parser->showTable();
       }
      ?>
   </body>
